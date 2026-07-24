@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Complete Node.js project",
+    "description": "Finish the backend and frontend for the TaskFlow app",
+    "completed": false,
+    "priority": "high",
+    "dueDate": "2026-07-30",
+    "createdAt": "2026-07-24T10:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Review pull requests",
+    "description": "Go through the open PRs from the team before standup",
+    "completed": false,
+    "priority": "medium",
+    "dueDate": "2026-07-25",
+    "createdAt": "2026-07-24T09:15:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Write weekly report",
+    "description": "",
+    "completed": true,
+    "priority": "low",
+    "dueDate": "2026-07-22",
+    "createdAt": "2026-07-21T14:30:00.000Z"
+  }
+]
