@@ -1,0 +1,93 @@
+---
+- name: Deploy Node.js App
+  hosts: localhost
+  connection: local
+  become: yes
+
+  vars:
+    repo_url: "https://github.com/Poonguzhali-C/Infrastructure-Automation.git"
+    repo_dir: "/home/ubuntu/Infrastructure-Automation"
+    app_dir: "/home/ubuntu/Infrastructure-Automation/todo-app"
+    app_name: "node-app"
+
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Install curl
+      apt:
+        name: curl
+        state: present
+
+    - name: Install NodeJS repository
+      shell: |
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+      args:
+        executable: /bin/bash
+
+    - name: Install NodeJS
+      apt:
+        name: nodejs
+        state: present
+        update_cache: yes
+
+    - name: Install PM2
+      npm:
+        name: pm2
+        global: yes
+
+    - name: Remove old repository
+      file:
+        path: "{{ repo_dir }}"
+        state: absent
+
+    - name: Clone GitHub repository
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ repo_dir }}"
+        version: master
+        force: yes
+
+    - name: Change ownership
+      file:
+        path: "{{ repo_dir }}"
+        owner: ubuntu
+        group: ubuntu
+        recurse: yes
+
+    - name: Install npm packages
+      become_user: ubuntu
+      command: npm install
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Stop existing PM2 app
+      become_user: ubuntu
+      shell: pm2 delete {{ app_name }}
+      ignore_errors: yes
+
+    - name: Start Node application
+      become_user: ubuntu
+      shell: pm2 start server.js --name {{ app_name }}
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Save PM2 process
+      become_user: ubuntu
+      shell: pm2 save
+
+    - name: Show PM2 status
+      become_user: ubuntu
+      command: pm2 list
+      register: pm2_output
+
+    - name: Display PM2 status
+      debug:
+        var: pm2_output.stdout
