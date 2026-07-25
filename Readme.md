@@ -1,7 +1,7 @@
 ## Architecture
 
 <p align="center">
-<img src="images/terraform.png" width="900">
+<img src="image/terraform.png" width="900">
 </p>
 
 ## Workflow
